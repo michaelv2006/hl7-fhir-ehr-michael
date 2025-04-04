@@ -31,7 +31,7 @@ def WritePatient(patient_dict: dict):
 def GetPatientByIdentifier(patientSystem,patientValue):
     try:
         patient = collection.find_one({"identifier.system":patientSystem,"identifier.value":patientValue})
-        print("paitnet retornado:",patient)
+        print("patient retornado:",patient)
         if patient:
             patient["_id"] = str(patient["_id"])
             return "success", patient
