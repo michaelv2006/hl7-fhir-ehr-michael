@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 import uvicorn
-from app.controlador.ServiceRequestCrud import GetServiceRequestById, WriteServiceRequest, GetServiceRequestByIdentifier
+from app.controlador.service-requestCrud import GetServiceRequestById, WriteServiceRequest, GetServiceRequestByIdentifier
 from fastapi.middleware.cors import CORSMiddleware
 
 # Crear una instancia de FastAPI
@@ -15,8 +15,8 @@ app.add_middleware(
     allow_headers=["*"],  # Permitir todos los encabezados
 )
 
-# Ruta para obtener una solicitud de servicio por su ID
-@app.get("/servicerequest/{request_id}", response_model=dict)
+# solicitud de servicio por ID
+@app.get("/ServiceRequest/{request_id}", response_model=dict)
 async def get_service_request_by_id(request_id: str):
     status, service_request = GetServiceRequestById(request_id)  # Llamar a la función que obtiene la solicitud
     if status == 'success':
@@ -27,7 +27,7 @@ async def get_service_request_by_id(request_id: str):
         raise HTTPException(status_code=500, detail=f"Error interno del servidor. {status}")  # Error interno
 
 # agregar una nueva solicitud de servicio
-@app.post("/servicerequest", response_model=dict)
+@app.post("/ServiceRequest", response_model=dict)
 async def add_service_request(request: Request):
     new_service_request_dict = dict(await request.json())  # Convertir la solicitud JSON a un diccionario
     status, request_id = WriteServiceRequest(new_service_request_dict)  # Llamar a la función que escribe la solicitud
@@ -36,8 +36,8 @@ async def add_service_request(request: Request):
     else:
         raise HTTPException(status_code=500, detail=f"Error interno del servidor: {status}")  # Error interno
 
-# Ruta para obtener una solicitud de servicio por su identificador
-@app.get("/servicerequest", response_model=dict)
+# solicitud de servicio por su identificador
+@app.get("/ServiceRequest", response_model=dict)
 async def get_service_request_by_identifier(system: str, value: str):
     status, service_request = GetServiceRequestByIdentifier(system, value)  # Llamar a la función que busca la solicitud
     if status == 'success':
