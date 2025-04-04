@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request
-import uvicorn
+import uvicorn import os
 from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,7 +12,14 @@ app.add_middleware(
     allow_methods=["*"],  # Permitir todos los métodos (GET, POST, etc.)
     allow_headers=["*"],  # Permitir todos los encabezados
 )
+@app.get("/")
+async def root():
+    return{"message":"Bienvenido a HL7 FHIR APPI"}
 
+@app.get("/status")
+async def check_status():
+    return{"message":"API está funcionando en https://hl7-patient-write-michael.onrender.com"}
+    
 @app.get("/patient/{patient_id}", response_model=dict)
 async def get_patient_by_id(patient_id: str):
     status,patient = GetPatientById(patient_id)
