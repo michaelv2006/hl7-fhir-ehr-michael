@@ -13,7 +13,7 @@ def GetServiceRequestById(request_id: str):
             service_request["_id"] = str(service_request["_id"])
             return "success", service_request
         return "notFound", None
-    except Exception:
+    except Exception as e:
         return "error", None
 
 
