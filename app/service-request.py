@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 import uvicorn
-from app.controlador.ProcedurerequestCrud import GetServiceRequestById, WriteServiceRequest, GetServiceRequestByIdentifier
+from ProcedurerequestCrud import GetServiceRequestById, WriteServiceRequest, GetServiceRequestByIdentifier
 from fastapi.middleware.cors import CORSMiddleware
 
 # Crear una instancia de FastAPI
@@ -22,7 +22,7 @@ async def get_service_request_by_id(request_id: str):
     if status == 'success':
         return service_request  # Devolver la solicitud 
     elif status == 'notFound':
-        raise HTTPException(status_code=204, detail="La solicitud de servicio no existe")  #  no se encuentra
+        raise HTTPException(status_code=404, detail="La solicitud de servicio no existe")  #  no se encuentra
     else:
         raise HTTPException(status_code=500, detail=f"Error interno del servidor. {status}")  # Error interno
 
