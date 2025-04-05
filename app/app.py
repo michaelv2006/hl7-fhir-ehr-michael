@@ -40,12 +40,10 @@ async def get_service_request_by_identifier(system: str, value: str):
     if status == 'success':
         return service_request  # Devolver la solicitud si se encuentra
     elif status == 'notFound':
-        raise HTTPException(status_code=204, detail="La solicitud de servicio no existe")  # Código 204 si no se encuentra
+        raise HTTPException(status_code=404, detail="La solicitud de servicio no existe")  # Código 204 si no se encuentra
     else:
         raise HTTPException(status_code=500, detail=f"Error interno del servidor. {status}")  # Error interno
-    else:
-        raise HTTPException(status_code=500, detail=f"Validating error: {status}")
-
+    
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
