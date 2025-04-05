@@ -3,7 +3,7 @@ from bson import ObjectId
 from fhir.resources.servicerequest import ServiceRequest
 import json
 
-collection = connect_to_mongodb("SamplePatientService", "ServiceRequest")
+collection = connect_to_mongodb("SamplePatientService", "Procedures")
 
 
 def GetServiceRequestById(request_id: str):
