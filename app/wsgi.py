@@ -1,4 +1,4 @@
-from app.app import app
+from app.service-request import service-request
 
 if __name__ == "__main__":
     import uvicorn
