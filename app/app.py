@@ -15,7 +15,7 @@ app.add_middleware(
 
 @app.get("/servicerequest/{Service_Request_id}", response_model=dict)
 async def get_Service_request_by_id(request_id: str):
-    status, service_request = GetServiceRequestById(request_id)  # Llamar a la función que obtiene la solicitud
+    status, service_request = GetService_RequestById(request_id)  # Llamar a la función que obtiene la solicitud
     if status == 'success':
         return service_request  # Devolver la solicitud si se encuentra
     elif status == 'notFound':
