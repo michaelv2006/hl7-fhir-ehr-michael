@@ -15,7 +15,7 @@ app.add_middleware(
 
 @app.get("/servicerequest/{Service_Request_id}", response_model=dict)
 async def get_Service_request_by_id(request_id: str):
-    status, service_request = GetService_RequestById(request_id)  # Llamar a la función que obtiene la solicitud
+    status, service_request = GetService_RequestById(Service_request_id)  # Llamar a la función que obtiene la solicitud
     if status == 'success':
         return service_request  # Devolver la solicitud si se encuentra
     elif status == 'notFound':
@@ -27,7 +27,7 @@ async def get_Service_request_by_id(request_id: str):
 @app.post("/servicerequest", response_model=dict)
 async def add_service_request(request: Request):
     new_service_request_dict = dict(await request.json())  # Convertir la solicitud JSON a un diccionario
-    status, request_id = WriteServiceRequest(new_service_request_dict)  # Llamar a la función que escribe la solicitud
+    status, request_id = WriteService_Request(new_service_request_dict)  # Llamar a la función que escribe la solicitud
     if status == 'success':
         return {"_id": request_id}  # Devolver el ID de la solicitud si se creó correctamente
     else:
@@ -36,17 +36,14 @@ async def add_service_request(request: Request):
 # Ruta para obtener una solicitud de servicio por su identificador
 @app.get("/servicerequest", response_model=dict)
 async def get_service_request_by_identifier(system: str, value: str):
-    status, service_request = GetServiceRequestByIdentifier(system, value)  # Llamar a la función que busca la solicitud
+    status, service_request = GetServiceRequestByIdentifier(System, Value)  # Llamar a la función que busca la solicitud
     if status == 'success':
         return service_request  # Devolver la solicitud si se encuentra
     elif status == 'notFound':
         raise HTTPException(status_code=204, detail="La solicitud de servicio no existe")  # Código 204 si no se encuentra
     else:
         raise HTTPException(status_code=500, detail=f"Error interno del servidor. {status}")  # Error interno
-
-if __name__ == '__main__':
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    else:
         raise HTTPException(status_code=500, detail=f"Validating error: {status}")
 
 if __name__ == '__main__':
