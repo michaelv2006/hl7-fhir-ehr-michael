@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 import uvicorn
-from app.controlador.service-requestCrud import GetServiceRequestById, WriteServiceRequest, GetServiceRequestByIdentifier
+from app.controlador.ProcedurerequestCrud import GetServiceRequestById, WriteServiceRequest, GetServiceRequestByIdentifier
 from fastapi.middleware.cors import CORSMiddleware
 
 # Crear una instancia de FastAPI
@@ -9,7 +9,7 @@ app = FastAPI()
 # Configurar middleware CORS para permitir solicitudes desde un dominio específico
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://service-request-mz4b.onrender.com"],  # Permitir solo este dominio
+    allow_origins=["https://hl7-fhir-ehr-michael.onrender.com"],  # Permitir solo este dominio
     allow_credentials=True,
     allow_methods=["*"],  # Permitir todos los métodos (GET, POST, etc.)
     allow_headers=["*"],  # Permitir todos los encabezados
