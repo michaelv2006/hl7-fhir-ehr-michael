@@ -31,7 +31,7 @@ def WriteService_Request(Service_request_dict: dict):
 def GetService_RequestByIdentifier(requestSystem,requestValue):
     try:
         Service_request = collection.find_one({"identifier.system":requestSystem,"identifier.value":requestValue})
-        if patient:
+        if Service_request:
             Service_request["_id"] = str(Service_request["_id"])
             return "success", Service_request
         return "notFound", None
