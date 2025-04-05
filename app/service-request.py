@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 import uvicorn
-from ProcedurerequestCrud import GetServiceRequestById, WriteServiceRequest, GetServiceRequestByIdentifier
+from app.controlador.ProcedurerequestCrud import GetServiceRequestById, WriteServiceRequest, GetServiceRequestByIdentifier
 from fastapi.middleware.cors import CORSMiddleware
 
 # Crear una instancia de FastAPI
