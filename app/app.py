@@ -19,7 +19,7 @@ async def get_Service_request_by_id(Service_request_id: str):
     if status == 'success':
         return service_request  # Devolver la solicitud si se encuentra
     elif status == 'notFound':
-        raise HTTPException(status_code=204, detail="La solicitud de servicio no existe")  # Código 204 si no se encuentra
+        raise HTTPException(status_code=404, detail="La solicitud de servicio no existe")  # Código 204 si no se encuentra
     else:
         raise HTTPException(status_code=500, detail=f"Error interno del servidor. {status}")  # Error interno
 
