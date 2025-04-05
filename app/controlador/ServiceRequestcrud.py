@@ -28,7 +28,7 @@ def WriteService_request(Service_request_dict: dict):
     else:
         return "errorInserting", None
 
-def GetPatientByIdentifier(requestSystem,requestValue):
+def GetService_requestByIdentifier(requestSystem,requestValue):
     try:
         Service_request = collection.find_one({"identifier.system":requestSystem,"identifier.value":requestValue})
         if patient:
