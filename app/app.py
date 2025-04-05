@@ -45,3 +45,7 @@ async def get_service_request_by_identifier(system: str, value: str):
         raise HTTPException(status_code=500, detail=f"Error interno del servidor. {status}")  # Error interno
     else:
         raise HTTPException(status_code=500, detail=f"Validating error: {status}")
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
