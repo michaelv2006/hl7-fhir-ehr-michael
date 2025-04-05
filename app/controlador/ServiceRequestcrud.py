@@ -5,7 +5,7 @@ import json
 
 collection = connect_to_mongodb("SamplePatientService", "Procedures")
 
-def GetService_requestById(Service_request_id: str):
+def GetService_RequestById(Service_request_id: str):
     try:
         Service_request = collection.find_one({"_id": ObjectId(Service_request_id)})
         if Service_request:
@@ -15,7 +15,7 @@ def GetService_requestById(Service_request_id: str):
     except Exception as e:
         return f"notFound", None
 
-def WriteService_request(Service_request_dict: dict):
+def WriteService_Request(Service_request_dict: dict):
     try:
         req = Service_request.model_validate(Service_request_dict)
     except Exception as e:
@@ -28,7 +28,7 @@ def WriteService_request(Service_request_dict: dict):
     else:
         return "errorInserting", None
 
-def GetService_requestByIdentifier(requestSystem,requestValue):
+def GetService_RequestByIdentifier(requestSystem,requestValue):
     try:
         Service_request = collection.find_one({"identifier.system":requestSystem,"identifier.value":requestValue})
         if patient:
