@@ -1,11 +1,11 @@
 from connection import connect_to_mongodb
 from bson import ObjectId
-from fhir.resources.patient import Patient
+from fhir.resources.servicerequest import ServiceRequest
 import json
 
 collection = connect_to_mongodb("SamplePatientService", "Procedures")
 
-def GetService_requestById(patient_id: str):
+def GetService_requestById(Service_request_id: str):
     try:
         Service_request = collection.find_one({"_id": ObjectId(Service_request_id)})
         if Service_request:
@@ -21,7 +21,7 @@ def WriteService_request(Service_request_dict: dict):
     except Exception as e:
         return f"errorValidating: {str(e)}",None
     validated_Service_request_json = req.model_dump()
-    result = collection.insert_one( validated_Service_request_json)
+    result = collection.insert_one(validated_Service_request_json)
     if result:
         inserted_id = str(result.inserted_id)
         return "success",inserted_id
