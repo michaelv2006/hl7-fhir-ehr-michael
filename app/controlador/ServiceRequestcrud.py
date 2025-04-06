@@ -1,39 +1,75 @@
 from connection import connect_to_mongodb
 from bson import ObjectId
-from fhir.resources.servicerequest import ServiceRequest
+from fhir.resources.patient import Patient
 import json
 
-collection = connect_to_mongodb("SamplePatientService", "Procedures")
+collection = connect_to_mongodb("SamplePatientService", "Patient")
+service_requests_collection = connect_to_mongodb("SamplePatientService", "service_requests")
 
-def GetService_RequestById(Service_request_id: str):
+def GetPatientById(patient_id: str):
     try:
-        Service_request = collection.find_one({"_id": ObjectId(Service_request_id)})
-        if Service_request:
-            Service_request["_id"] = str(Service_request["_id"])
-            return "success", Service_request
+        patient = collection.find_one({"_id": ObjectId(patient_id)})
+        if patient:
+            patient["_id"] = str(patient["_id"])
+            return "success", patient
         return "notFound", None
     except Exception as e:
         return f"notFound", None
 
-def WriteService_Request(Service_request_dict: dict):
+def WritePatient(patient_dict: dict):
     try:
-        req = ServiceRequest.parse_obj(Service_request_dict)
+        pat = Patient.model_validate(patient_dict)
     except Exception as e:
         return f"errorValidating: {str(e)}",None
-    validated_Service_request_json = req.model_dump()
-    result = collection.insert_one(validated_Service_request_json)
+    validated_patient_json = pat.model_dump()
+    result = collection.insert_one(patient_dict)
     if result:
         inserted_id = str(result.inserted_id)
         return "success",inserted_id
     else:
         return "errorInserting", None
 
-def GetService_RequestByIdentifier(requestSystem,requestValue):
+
+def GetPatientByIdentifier(patientSystem, patientValue):
     try:
-        Service_request = collection.find_one({"identifier.system":requestSystem,"identifier.value":requestValue})
-        if Service_request:
-            Service_request["_id"] = str(Service_request["_id"])
-            return "success", Service_request
+        patient = collection.find_one({
+            "identifier": {
+                "$elemMatch": {
+                    "system": patientSystem,
+                    "value": patientValue
+                }
+            }
+        })
+        if patient:
+            patient["_id"] = str(patient["_id"])
+            return "success", patient
         return "notFound", None
     except Exception as e:
-        return f"error encontrado: {str(e)}", None
+        print("Error in GetPatientByIdentifier:", e)
+        return "notFound", None
+
+def read_service_request(service_request_id: str) -> dict:
+    """
+    Recupera una solicitud de servicio a partir de su ID.
+    """
+    try:
+        query = {"_id": ObjectId(service_request_id)}
+    except Exception as e:
+        print("Error al convertir el ID:", e)
+        return None
+
+    service_request = service_requests_collection.find_one(query)
+    if service_request:
+        service_request["_id"] = str(service_request["_id"])
+        return service_request
+    else:
+        return None
+
+def WriteServiceRequest(service_request_data: dict):
+    try:
+        # Inserta la solicitud en la colección configurada para solicitudes de servicio
+        result = service_requests_collection.insert_one(service_request_data)
+        return "success", str(result.inserted_id)
+    except Exception as e:
+        print("Error in WriteServiceRequest:", e)
+        return "error", None
