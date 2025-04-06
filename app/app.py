@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
-from app.controlador.PatientCrud import (
+from app.controlador.Patientcrud import (
     GetPatientById,
     GetPatientByIdentifier,
     WritePatient,
