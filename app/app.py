@@ -29,13 +29,12 @@ async def create_service_request(request: Request):
     try:
         Service_request_dict = await request.json()
         print("🔹 Recibido:", Service_request_dict)
-        
-        req = ServiceRequest.parse_obj(Service_request_dict)  # usa esto en lugar de model_validate
+        status, result = WriteService_Request(data)
 
-        collection.insert_one(Service_request_dict)
-
-        return {"message": "Solicitud creada", "_id": str(req.id)}
-    
+        if status == "success":
+            return {"message": "Solicitud creada", "_id": result}
+        else:
+            raise HTTPException(status_code=400, detail=status)
     except Exception as e:
         print("❌ Error al guardar:", str(e))
         raise HTTPException(status_code=400, detail=str(e))
