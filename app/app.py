@@ -75,7 +75,10 @@ async def add_service_request(request: Request):
 @app.get("/")
 async def root():
     return {"message": "API HIS 2 - Procedimientos funcionando correctamente 🚀"}
-
+    
+@app.head("/")
+async def root_head():
+    return
 # Solo necesario para desarrollo local
 if __name__ == '__main__':
     import uvicorn
