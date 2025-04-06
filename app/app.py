@@ -17,7 +17,7 @@ app = FastAPI(
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://hl7-fhir-ehr-michael.onrender.com"],  # Cambia esto si tienes un nuevo frontend
+    allow_origins=["https://hl7-fhir-ehr-michael.onrender.com/service-request/"],  # Cambia esto si tienes un nuevo frontend
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
