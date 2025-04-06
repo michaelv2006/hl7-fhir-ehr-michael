@@ -17,7 +17,7 @@ def GetService_RequestById(Service_request_id: str):
 
 def WriteService_Request(Service_request_dict: dict):
     try:
-        req = Service_request.model_validate(Service_request_dict)
+        req = ServiceRequest.parse_obj(Service_request_dict)
     except Exception as e:
         return f"errorValidating: {str(e)}",None
     validated_Service_request_json = req.model_dump()
