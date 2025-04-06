@@ -51,7 +51,7 @@ async def get_service_request(service_request_id: str):
     else:
         raise HTTPException(status_code=404, detail="Solicitud de servicio no encontrada")
 
-@app.post("/service-request", response_model=dict)
+@app.post("/service-request/", response_model=dict)
 async def add_service_request(request: Request):
     service_request_data = await request.json()
     status, service_request_id = WriteServiceRequest(service_request_data)
