@@ -7,7 +7,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://medservice-94k9.onrender.com/servicerequest", "https://hl7-fhir-ehr-michael.onrender.com "],  # Permitir solo este dominio
+    allow_origins=["https://hl7-fhir-ehr-michael.onrender.com/patient", "https://hl7-fhir-ehr-michael.onrender.com "],  # Permitir solo este dominio
     allow_credentials=True,
     allow_methods=["*"],  # Permitir todos los métodos (GET, POST, etc.)
     allow_headers=["*"],  # Permitir todos los encabezados
