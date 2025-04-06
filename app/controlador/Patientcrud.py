@@ -30,13 +30,13 @@ def WritePatient(patient_dict: dict):
         return "errorInserting", None
 
 
-def GetPatientByIdentifier(patientSystem, patientValue):
+def GetPatientByIdentifier(system, value):
     try:
         patient = collection.find_one({
             "identifier": {
                 "$elemMatch": {
-                    "system": patientSystem,
-                    "value": patientValue
+                    "system": system,
+                    "value": value
                 }
             }
         })
