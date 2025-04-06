@@ -56,7 +56,7 @@ if __name__ == "__main__":
     
     # Identifier específico a buscar (reemplaza con los valores que desees)
     identifier_type = "cc"
-    identifier_value = "1020713756"
+    identifier_value = "1011091695"
     
     # Buscar el paciente por identifier
     patient = find_patient_by_identifier(collection, identifier_type, identifier_value)
