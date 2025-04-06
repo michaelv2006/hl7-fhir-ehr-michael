@@ -24,14 +24,22 @@ async def get_Service_request_by_id(Service_request_id: str):
         raise HTTPException(status_code=500, detail=f"Error interno del servidor. {status}")  # Error interno
 
 # Ruta para agregar una nueva solicitud de servicio
-@app.post("/servicerequest", response_model=dict)
-async def add_service_request(request: Request):
-    new_service_request_dict = dict(await request.json())  # Convertir la solicitud JSON a un diccionario
-    status, request_id = WriteService_Request(new_service_request_dict)  # Llamar a la función que escribe la solicitud
-    if status == 'success':
-        return {"_id": request_id}  # Devolver el ID de la solicitud si se creó correctamente
-    else:
-        raise HTTPException(status_code=500, detail=f"Error interno del servidor: {status}")  # Error interno
+@app.post("/servicerequest")
+async def create_service_request(request: Request):
+    try:
+        Service_request_dict = await request.json()
+        print("🔹 Recibido:", Service_request_dict)
+        
+        req = ServiceRequest.parse_obj(Service_request_dict)  # usa esto en lugar de model_validate
+
+        collection.insert_one(Service_request_dict)
+
+        return {"message": "Solicitud creada", "_id": str(req.id)}
+    
+    except Exception as e:
+        print("❌ Error al guardar:", str(e))
+        raise HTTPException(status_code=400, detail=str(e))
+
 
 # Ruta para obtener una solicitud de servicio por su identificador
 @app.get("/servicerequest", response_model=dict)
