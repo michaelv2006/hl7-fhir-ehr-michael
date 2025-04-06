@@ -8,11 +8,7 @@ from app.controlador.Patientcrud import (
     WriteServiceRequest
 )
 
-app = FastAPI(
-    title="HIS 2 - Procedimientos",
-    description="API para registrar y consultar procedimientos médicos (ServiceRequest)",
-    version="1.0.0"
-)
+app = FastAPI()
 
 # CORS middleware
 app.add_middleware(
@@ -23,7 +19,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Endpoints para gestión de pacientes (por compatibilidad o uso auxiliar)
 @app.get("/patient/{patient_id}", response_model=dict)
 async def get_patient_by_id(patient_id: str):
     status, patient = GetPatientById(patient_id)
@@ -72,14 +67,6 @@ async def add_service_request(request: Request):
     else:
         raise HTTPException(status_code=500, detail=f"Error al registrar el procedimiento: {status}")
         
-@app.get("/")
-async def root():
-    return {"message": "API HIS 2 - Procedimientos funcionando correctamente 🚀"}
-    
-@app.head("/")
-async def root_head():
-    return
-# Solo necesario para desarrollo local
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
