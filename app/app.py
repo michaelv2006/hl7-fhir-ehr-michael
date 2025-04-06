@@ -71,6 +71,10 @@ async def add_service_request(request: Request):
         return {"_id": service_request_id}
     else:
         raise HTTPException(status_code=500, detail=f"Error al registrar el procedimiento: {status}")
+        
+@app.get("/")
+async def root():
+    return {"message": "API HIS 2 - Procedimientos funcionando correctamente 🚀"}
 
 # Solo necesario para desarrollo local
 if __name__ == '__main__':
