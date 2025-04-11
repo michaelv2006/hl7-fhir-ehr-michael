@@ -38,3 +38,29 @@ def GetPatientByIdentifier(patientSystem,patientValue):
         return "notFound",None
     except Exception as e:
         return f"error encontrado: {str(e)}",None
+
+def read_service_request(service_request_id: str) -> dict:
+    """
+    Recupera una solicitud de servicio a partir de su ID.
+    """
+    try:
+        query = {"_id": ObjectId(service_request_id)}
+    except Exception as e:
+        print("Error al convertir el ID:", e)
+        return None
+
+    service_request = service_requests_collection.find_one(query)
+    if service_request:
+        service_request["_id"] = str(service_request["_id"])
+        return service_request
+    else:
+        return None
+
+def WriteServiceRequest(service_request_data: dict):
+    try:
+        # Inserta la solicitud en la colección configurada para solicitudes de servicio
+        result = service_requests_collection.insert_one(service_request_data)
+        return "success", str(result.inserted_id)
+    except Exception as e:
+        print("Error in WriteServiceRequest:", e)
+        return "error", None
