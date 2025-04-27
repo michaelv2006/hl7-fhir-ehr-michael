@@ -66,3 +66,31 @@ def WriteServiceRequest(service_request_data: dict):
     except Exception as e:
         print("Error in WriteServiceRequest:", e)
         return "error", None
+
+def read_appointment(appointment_id: str) -> dict:
+    """
+    Recupera un Appointment a partir de su ID.
+    """
+    try:
+        query = {"_id": ObjectId(appointment_id)}
+    except Exception as e:
+        print("Error al convertir el ID:", e)
+        return None
+
+    appointment = appointments_collection.find_one(query)
+    if appointment:
+        appointment["_id"] = str(appointment["_id"])
+        return appointment
+    else:
+        return None
+
+def WriteAppointment(appointment_data: dict):
+    """
+    Inserta un Appointment en la base de datos.
+    """
+    try:
+        result = appointments_collection.insert_one(appointment_data)
+        return "success", str(result.inserted_id)
+    except Exception as e:
+        print("Error en WriteAppointment:", e)
+        return "error", None
