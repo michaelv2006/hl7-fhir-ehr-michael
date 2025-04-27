@@ -66,7 +66,24 @@ async def add_service_request(request: Request):
     else:
         raise HTTPException(status_code=500, detail=f"Error al registrar la solicitud: {status}")
 
+@app.get("/appointment/{appointment_id}", response_model=dict)
+async def get_appointment(appointment_id: str):
+    appointment = read_appointment(appointment_id)
+    if appointment:
+        return appointment
+    else:
+        raise HTTPException(status_code=404, detail="Appointment no encontrado")
 
+@app.post("/appointment", response_model=dict)
+async def add_appointment(request: Request):
+    appointment_data = await request.json()
+    status, appointment_id = WriteAppointment(appointment_data)
+
+    if status == "success":
+        return {"_id": appointment_id}
+    else:
+        raise HTTPException(status_code=500, detail=f"Error al registrar el Appointment: {status}")
+        
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=10000)
