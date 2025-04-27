@@ -5,6 +5,7 @@ import json
 
 collection = connect_to_mongodb("SamplePatientService", "patients")
 service_requests_collection = connect_to_mongodb("SamplePatientService", "service_requests")
+appointment_collection = connect_to_mongodb("SamplePatientService", "appointment")
 
 def GetPatientById(patient_id: str):
     try:
