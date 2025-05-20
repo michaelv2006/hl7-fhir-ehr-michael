@@ -64,9 +64,17 @@ def WriteServiceRequest(service_request_dict: dict):
     except Exception as e:
         return f"errorValidating: {str(e)}", None
 
-    # Extraer campos clave para identificar duplicados
-    subject_ref = service_request_dict.get("subject", {}).get("reference")
-    procedure_code = service_request_dict.get("code", {}).get("coding", [{}])[0].get("code")
+    # Revisión paso a paso
+    subject = service_request_dict.get("subject", {})
+    subject_ref = subject.get("reference")
+
+    code = service_request_dict.get("code", {})
+    coding_list = code.get("coding", [])
+    procedure_code = coding_list[0].get("code") if coding_list else None
+
+    # Imprimir para debug
+    print("✅ subject.reference:", subject_ref)
+    print("✅ code.coding[0].code:", procedure_code)
 
     if not subject_ref or not procedure_code:
         return "missingKeyFields", None
