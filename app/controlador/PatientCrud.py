@@ -58,14 +58,35 @@ def read_service_request(service_request_id: str) -> dict:
     else:
         return None
 
-def WriteServiceRequest(service_request_data: dict):
+def WriteServiceRequest(service_request_dict: dict):
     try:
-        # Inserta la solicitud en la colección configurada para solicitudes de servicio
-        result = service_requests_collection.insert_one(service_request_data)
-        return "success", str(result.inserted_id)
+        sr = ServiceRequest.model_validate(service_request_dict)
     except Exception as e:
-        print("Error in WriteServiceRequest:", e)
-        return "error", None
+        return f"errorValidating: {str(e)}", None
+
+    # Extraer campos clave para identificar duplicados
+    subject_ref = service_request_dict.get("subject", {}).get("reference")
+    procedure_code = service_request_dict.get("code", {}).get("coding", [{}])[0].get("code")
+
+    if not subject_ref or not procedure_code:
+        return "missingKeyFields", None
+
+    # Verificar si ya existe
+    existing = collection.find_one({
+        "subject.reference": subject_ref,
+        "code.coding.0.code": procedure_code
+    })
+
+    if existing:
+        return "alreadyExists", str(existing["_id"])
+
+    # Insertar si no existe
+    result = collection.insert_one(service_request_dict)
+    if result.inserted_id:
+        return "success", str(result.inserted_id)
+    else:
+        return "errorInserting", None
+
 
 def read_appointment(appointment_id: str) -> dict:
     """
