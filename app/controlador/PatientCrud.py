@@ -1,7 +1,6 @@
 from connection import connect_to_mongodb
 from bson import ObjectId
 from fhir.resources.patient import Patient
-from fhir.resources.patient import ServiceRequest
 import json
 
 collection = connect_to_mongodb("SamplePatientService", "patients")
@@ -61,7 +60,7 @@ def read_service_request(service_request_id: str) -> dict:
 
 def WriteServiceRequest(service_request_dict: dict):
     try:
-        sr = ServiceRequest.model_validate(service_request_dict)
+        sr = patient.model_validate(service_request_dict)
     except Exception as e:
         return f"errorValidating: {str(e)}", None
 
