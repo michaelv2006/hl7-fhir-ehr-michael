@@ -61,7 +61,7 @@ def read_service_request(service_request_id: str) -> dict:
 
 def WriteServiceRequest(service_request_dict: dict):
     try:
-        sr = ServiceRequest.model_validate(service_request_dict)
+        sr = ServiceRequest.parse_obj(service_request_dict)
     except Exception as e:
         return f"errorValidating: {str(e)}", None
 
