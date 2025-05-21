@@ -2,11 +2,13 @@ from connection import connect_to_mongodb
 from bson import ObjectId
 from fhir.resources.patient import Patient
 from fhir.resources.servicerequest import ServiceRequest
+from fhir.resources.procedures import Procedures
 import json
 
 collection = connect_to_mongodb("SamplePatientService", "patients")
 service_requests_collection = connect_to_mongodb("SamplePatientService", "service_requests")
 appointments_collection = connect_to_mongodb("SamplePatientService", "appointments")
+procedures_collection = connect_to_mongodb("SamplePatientService", "procedures")
 
 def GetPatientById(patient_id: str):
     try:
