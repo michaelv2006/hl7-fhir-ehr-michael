@@ -81,7 +81,7 @@ def WriteServiceRequest(service_request_dict: dict):
         return "missingKeyFields", None
 
     # Verificar si ya existe
-    existing = collection.find_one({
+    existing = service_requests_collection.find_one({
         "subject.reference": subject_ref,
         "code.coding.0.code": procedure_code
     })
@@ -90,7 +90,7 @@ def WriteServiceRequest(service_request_dict: dict):
         return "alreadyExists", str(existing["_id"])
 
     # Insertar si no existe
-    result = collection.insert_one(service_request_dict)
+    result = service_requests_collection.insert_one(service_request_dict)
     if result.inserted_id:
         return "success", str(result.inserted_id)
     else:
