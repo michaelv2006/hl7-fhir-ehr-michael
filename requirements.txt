@@ -1,4 +1,4 @@
-fhir.resources
+fhir.resources==6.1.0
 pymongo
 fastapi
 uvicorn
