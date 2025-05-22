@@ -117,33 +117,42 @@ def read_appointment(appointment_id: str) -> dict:
 
 def WriteAppointment(appointment_data: dict):
     """
-    Inserta un Appointment en la base de datos si existe la ServiceRequest asociada.
+    Inserta un Appointment en la base de datos si existe la ServiceRequest asociada
+    y no ha sido usada ya para otra cita.
     """
     try:
-        # Obtener la referencia a la ServiceRequest
         based_on_list = appointment_data.get("basedOn", [])
         if not based_on_list:
             return "missingServiceRequestReference", None
 
-        sr_ref = based_on_list[0].get("reference")  
+        sr_ref = based_on_list[0].get("reference")  # "ServiceRequest/682e57308763ad8542ed578d"
         if not sr_ref or not sr_ref.startswith("ServiceRequest/"):
             return "invalidServiceRequestReference", None
 
         sr_id = sr_ref.split("/")[1]
+
         try:
             sr_oid = ObjectId(sr_id)
         except Exception:
             return "invalidObjectId", None
-            
-        # Buscar ServiceRequest en la base de datos
+
+        # Verificar si el ServiceRequest existe
         sr = service_requests_collection.find_one({"_id": sr_oid})
         if not sr:
             return "serviceRequestNotFound", None
 
-        # Si existe, se puede insertar el Appointment
+        # Verificar si ya hay un Appointment asociado a este ServiceRequest
+        existing_appt = appointments_collection.find_one({
+            "basedOn.reference": sr_ref
+        })
+
+        if existing_appt:
+            return "appointmentAlreadyExists", None
+
+        # Si no existe, se inserta
         result = appointments_collection.insert_one(appointment_data)
         return "success", str(result.inserted_id)
-    
+
     except Exception as e:
         print("Error en WriteAppointment:", e)
         return "error", None
