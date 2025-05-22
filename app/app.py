@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request
 import uvicorn
-from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier,read_service_request,WriteServiceRequest,read_appointment,WriteAppointment
+from app.controlador.PatientCrud import GetPatientById,WritePatient,GetPatientByIdentifier,read_service_request,WriteServiceRequest,read_appointment,WriteAppointment,WriteProcedure,read_procedure
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -33,20 +33,6 @@ async def get_patient_by_identifier(system: str, value: str):
         raise HTTPException(status_code=204, detail="Patient not found")
     else:
         raise HTTPException(status_code=500, detail=f"Internal error. {status}")
-
-
-@app.post("/service-request", response_model=dict)
-async def add_service_request(request: Request):
-    service_request_data = await request.json()
-    status, service_request_id = WriteServiceRequest(service_request_data)
-
-    if status == "success":
-        return {"_id": service_request_id}
-    elif status == "alreadyExists":
-        raise HTTPException(status_code=409, detail=f"La solicitud de servicio ya existe. ID: {service_request_id}")
-    else:
-        raise HTTPException(status_code=500, detail=f"Error al registrar la solicitud: {status}")
-
 
 @app.get("/service-request/{service_request_id}", response_model=dict)
 async def get_service_request(service_request_id: str):
@@ -87,6 +73,33 @@ async def add_appointment(request: Request):
         return {"_id": appointment_id}
     else:
         raise HTTPException(status_code=500, detail=f"Error al registrar el Appointment: {status}")
+
+@app.get("/procedures/{procedure_id}")
+def get_procedure(procedure_id: str):
+    result = read_procedure(procedure_id)
+    if result:
+        return result
+    else:
+        raise HTTPException(status_code=404, detail="Procedure no encontrado")
+
+@app.post("/procedures", response_model=dict)
+async def add_procedure(request: Request):
+    procedure_data = await request.json()
+    status, procedure_id = WriteProcedure(procedure_data)
+
+    if status == "success":
+        return {"_id": procedure_id}
+    elif status == "missingServiceRequestReference":
+        raise HTTPException(status_code=400, detail="Falta la referencia a ServiceRequest")
+    elif status == "invalidServiceRequestReference":
+        raise HTTPException(status_code=400, detail="Referencia de ServiceRequest no válida")
+    elif status == "invalidObjectId":
+        raise HTTPException(status_code=400, detail="El ID de ServiceRequest no es válido")
+    elif status == "serviceRequestNotFound":
+        raise HTTPException(status_code=404, detail="ServiceRequest no encontrado")
+    else:
+        raise HTTPException(status_code=500, detail=f"Error al registrar el Procedure: {status}")
+
         
 if __name__ == '__main__':
     import uvicorn
