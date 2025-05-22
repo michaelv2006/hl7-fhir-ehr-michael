@@ -125,22 +125,25 @@ def WriteAppointment(appointment_data: dict):
         if not based_on_list:
             return "missingServiceRequestReference", None
 
-        sr_ref = based_on_list[0].get("reference")  # Ej: "ServiceRequest/abc123"
+        sr_ref = based_on_list[0].get("reference")  
         if not sr_ref or not sr_ref.startswith("ServiceRequest/"):
             return "invalidServiceRequestReference", None
 
         sr_id = sr_ref.split("/")[1]
-
+        try:
+            sr_oid = ObjectId(sr_id)
+        except Exception:
+            return "invalidObjectId", None
+            
         # Buscar ServiceRequest en la base de datos
-        sr = service_requests_collection.find_one({"_id": sr_id})
+        sr = service_requests_collection.find_one({"_id": sr_oid})
         if not sr:
             return "serviceRequestNotFound", None
 
         # Si existe, se puede insertar el Appointment
         result = appointments_collection.insert_one(appointment_data)
         return "success", str(result.inserted_id)
-
+    
     except Exception as e:
         print("Error en WriteAppointment:", e)
         return "error", None
-
