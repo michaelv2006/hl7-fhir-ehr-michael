@@ -2,6 +2,7 @@ from connection import connect_to_mongodb
 from bson import ObjectId
 from fhir.resources.patient import Patient
 from fhir.resources.servicerequest import ServiceRequest
+from fhir.resources.procedure import Procedure
 import json
 
 collection = connect_to_mongodb("SamplePatientService", "patients")
@@ -156,3 +157,47 @@ def WriteAppointment(appointment_data: dict):
     except Exception as e:
         print("Error en WriteAppointment:", e)
         return "error", None
+
+def WriteProcedure(procedure_data: dict):
+    try:
+        based_on_list = procedure_data.get("basedOn", [])
+        if not based_on_list:
+            return "missingServiceRequestReference", None
+
+        sr_ref = based_on_list[0].get("reference")  # e.g. "ServiceRequest/682e..."
+        if not sr_ref or not sr_ref.startswith("ServiceRequest/"):
+            return "invalidServiceRequestReference", None
+
+        sr_id = sr_ref.split("/")[1]
+        try:
+            sr_oid = ObjectId(sr_id)
+        except Exception:
+            return "invalidObjectId", None
+
+        sr = service_requests_collection.find_one({"_id": sr_oid})
+        if not sr:
+            return "serviceRequestNotFound", None
+
+        result = procedures_collection.insert_one(procedure_data)
+        return "success", str(result.inserted_id)
+
+    except Exception as e:
+        print("Error en WriteProcedure:", e)
+        return "error", None
+
+def read_procedure(procedure_id: str) -> dict:
+    """
+    Recupera un Procedure a partir de su ID.
+    """
+    try:
+        query = {"_id": ObjectId(procedure_id)}
+    except Exception as e:
+        print("Error al convertir el ID:", e)
+        return None
+
+    procedure = procedures_collection.find_one(query)
+    if procedure:
+        procedure["_id"] = str(procedure["_id"])
+        return procedure
+    else:
+        return None
