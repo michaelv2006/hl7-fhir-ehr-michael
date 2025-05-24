@@ -11,7 +11,7 @@ app.add_middleware(
     "https://write-service-request-mlbj.onrender.com",
     "https://appointment-sjzy.onrender.com",
     "https://procedures.onrender.com"
-]
+],
     allow_credentials=True,
     allow_methods=["*"],  # Permitir todos los métodos (GET, POST, etc.)
     allow_headers=["*"],  # Permitir todos los encabezados
